@@ -33,6 +33,8 @@ make install DESTDIR=%{?buildroot}
 %{_mandir}/man5/*
 
 %changelog
+* Fri Jan 20 2017 Brian Behlendorf  - 0.6.5.8-2
+- Kernel compatibility patches
 * Fri Sep 9 2016 Ned Bass <bass6@llnl.gov> - 0.6.5.8-1
 - Fix HAVE_MUTEX_OWNER test for kernels prior to 4.6 zfsonlinux/spl#566
 - Add handling for kernel 4.7's CONFIG_TRIM_UNUSED_KSYMS zfsonlinux/spl#565
