@@ -1,13 +1,9 @@
 
 ACLOCAL_AMFLAGS = -I config
 
-include config/rpm.am
-include config/deb.am
-include config/tgz.am
-
-SUBDIRS = include rpm
+SUBDIRS = include
 if CONFIG_USER
-SUBDIRS += lib cmd man scripts
+SUBDIRS += man
 endif
 if CONFIG_KERNEL
 SUBDIRS += module
@@ -21,7 +17,7 @@ endif
 
 AUTOMAKE_OPTIONS = foreign
 EXTRA_DIST  = autogen.sh META DISCLAIMER copy-builtin
-EXTRA_DIST += config/config.awk config/rpm.am config/deb.am config/tgz.am
+EXTRA_DIST += config/config.awk
 
 distclean-local::
 	-$(RM) -R autom4te*.cache
@@ -30,7 +26,7 @@ distclean-local::
 		\( -name '*.orig' -o -name '*.rej' -o -name '*~' \
 		-o -name '*.bak' -o -name '#*#' -o -name '.*.orig' \
 		-o -name '.*.rej' -o -name 'aclocal.m4' -o -size 0 \
-		-o -name '*%' -o -name '.*.cmd' -o -name 'core' \
+		-o -name '*%' -o -name 'core' \
 		-o -name 'Makefile' -o -name '$(LINUX_SYMBOLS)' \
 		-o -name '*.order' -o -name '*.markers' \) \
 		-type f -print | xargs $(RM)
