@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# Get commits per author (probably not what we really want)
+#git shortlog -sn
+
+summary=true
+
+function usage {
+	echo "usage: $0 [summary|detail]"
+	echo "	Summary (default) provides line counts and email addresses"
+	echo "  of authors for the project.  Detail provides counts and"
+	echo "  addresses by filename."
+	exit 1
+}
+
+if [ -n "$1" ]; then
+
+	if [ "$1" = "detail" ]; then
+		summary=false
+	elif [ "$1" = "summary" ]; then
+		summary=true
+	else
+		usage
+	fi
+fi
+
+# Get lines per author
+for dir in config include man module; do
+	find $dir -type f | while read file; do
+		git blame --porcelain $file  | awk '
+			/^author-mail/ {author=$2}
+			/^filename/ {filename=$2}
+			/^	/ {count[author]++}
+			END {
+				for (author in count) {
+				 print author,filename,count[author]
+				}
+			}
+		'
+	done
+done | awk --assign summary=$summary '
+	{ author=$1; filename=$2; count[author] += $3 }
+	{
+		if (summary == "false") {
+			print
+		}
+	}
+	END {
+		if (summary == "true") {
+			for (author in count) {
+			 print author,count[author]
+			}
+		}
+	}
+' | less
